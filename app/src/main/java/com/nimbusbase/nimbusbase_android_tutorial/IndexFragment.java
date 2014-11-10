@@ -99,8 +99,8 @@ public class IndexFragment extends PreferenceFragment {
     }
 
     protected boolean onPlaygroundItemClick(Preference item) {
-        final PGRecordsFragment
-                fragment = PGRecordsFragment.newInstance(MDLUser.ENTITY_NAME);
+        final PGFragmentTable
+                fragment = PGFragmentTable.newInstance(MDLUser.ENTITY_NAME);
         getFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

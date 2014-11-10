@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.List;
 /**
  * Created by Will on 11/10/14.
  */
-public class PGRecordsFragment extends PreferenceFragment {
+public class PGFragmentTable extends PreferenceFragment {
 
     private static String
         sTableNameKey = "table_name";
@@ -39,9 +38,9 @@ public class PGRecordsFragment extends PreferenceFragment {
     protected ListView
             mListView;
 
-    public static PGRecordsFragment newInstance(String tableName) {
-        final PGRecordsFragment
-                fragment = new PGRecordsFragment();
+    public static PGFragmentTable newInstance(String tableName) {
+        final PGFragmentTable
+                fragment = new PGFragmentTable();
         final Bundle
                 bundle = new Bundle();
         bundle.putString(sTableNameKey, tableName);
