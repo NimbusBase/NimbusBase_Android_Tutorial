@@ -10,5 +10,6 @@ public class PGListItemRecord extends Preference {
     public PGListItemRecord(Context context, PGRecord record) {
         super(context);
         setTitle(record.getTitle());
+        setSummary(record.getSummary());
     }
 }

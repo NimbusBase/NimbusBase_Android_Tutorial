@@ -1,5 +1,6 @@
 package com.nimbusbase.nimbusbase_android_tutorial;
 
+import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -31,6 +32,10 @@ public class IndexFragment extends PreferenceFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final ActionBar
+                actionBar = getActivity().getActionBar();
+        if (actionBar != null)
+            actionBar.setTitle(R.string.app_name);
    }
 
     protected PreferenceScreen initiatePreferenceScreen(int preferencesResID) {

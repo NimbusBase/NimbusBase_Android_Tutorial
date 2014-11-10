@@ -1,5 +1,7 @@
 package com.nimbusbase.nimbusbase_android_tutorial;
 
+import android.app.ActionBar;
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -47,12 +49,25 @@ public class PGRecordsFragment extends PreferenceFragment {
         this.mSQLiteOpenHelper = new MDLDatabaseManager(getActivity());
 
         addPreferencesFromResource(R.xml.fragment_pg_records);
+
+        final SQLiteDatabase
+                db = mSQLiteOpenHelper.getWritableDatabase();
+        final ContentValues
+                contentValues = new ContentValues();
+        contentValues.put("name", "William");
+        contentValues.put("email", "william@nimbusbase.com");
+        db.insert("User", null, contentValues);
     }
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        final ActionBar
+            actionBar = getActivity().getActionBar();
+        if (actionBar != null)
+            actionBar.setTitle(mTableName + " records");
 
         final SQLiteDatabase
                 database = mSQLiteOpenHelper.getReadableDatabase();
@@ -72,5 +87,6 @@ public class PGRecordsFragment extends PreferenceFragment {
                 preferenceScreen.addPreference(item);
             }
         }
-   }
+    }
+
 }

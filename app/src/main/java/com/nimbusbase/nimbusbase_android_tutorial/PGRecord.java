@@ -5,4 +5,5 @@ package com.nimbusbase.nimbusbase_android_tutorial;
  */
 public interface PGRecord {
     public String getTitle();
+    public String getSummary();
 }

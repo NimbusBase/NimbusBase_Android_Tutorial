@@ -65,6 +65,11 @@ public class MDLUser implements PGRecord {
 
     @Override
     public String getTitle() {
-        return name;
+        return name != null ? name : id.toString();
+    }
+
+    @Override
+    public String getSummary() {
+        return email;
     }
 }
