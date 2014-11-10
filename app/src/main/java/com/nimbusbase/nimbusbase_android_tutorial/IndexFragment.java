@@ -3,6 +3,7 @@ package com.nimbusbase.nimbusbase_android_tutorial;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by Will on 11/7/14.
  */
-public class IndexFragment extends ListFragment {
+public class IndexFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,27 +29,13 @@ public class IndexFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_index, null);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final ListView
-                listView = getListView();
-
-
-
-        final IndexListAdapter
-                adapter =  new IndexListAdapter(getActivity(), new String[]{"Dropbox", "Box"});
-        setListAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
+        addPreferencesFromResource(R.xml.fragment_index);
     }
 
     //region Event
