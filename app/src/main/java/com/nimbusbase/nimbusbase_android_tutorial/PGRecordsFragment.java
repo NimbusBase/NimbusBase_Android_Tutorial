@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import java.util.List;
@@ -41,6 +43,7 @@ public class PGRecordsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
 
         final Bundle
                 bundle = getArguments();
@@ -89,4 +92,8 @@ public class PGRecordsFragment extends PreferenceFragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_pg_records, menu);
+    }
 }

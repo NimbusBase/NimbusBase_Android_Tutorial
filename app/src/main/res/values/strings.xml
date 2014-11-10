@@ -12,5 +12,6 @@
     <string name="auth_state_in">In</string>
     <string name="auth_state_signing_in">Signing in</string>
     <string name="auth_state_signing_out">Signing out</string>
+    <string name="action_insert">Insert</string>
 
 </resources>
