@@ -5,11 +5,17 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import java.util.List;
 
@@ -53,6 +59,7 @@ public class PGRecordsFragment extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.fragment_pg_records);
 
+
         final SQLiteDatabase
                 db = mSQLiteOpenHelper.getWritableDatabase();
         final ContentValues
@@ -62,6 +69,28 @@ public class PGRecordsFragment extends PreferenceFragment {
         db.insert("User", null, contentValues);
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View
+                view = super.onCreateView(inflater, container, savedInstanceState);
+        final ListView
+                listView = (ListView) view.findViewById(android.R.id.list);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final ListAdapter
+                        listAdapter = ((ListView) parent).getAdapter();
+                final Object
+                        object = listAdapter.getItem(position);
+                if (object != null && object instanceof View.OnLongClickListener) {
+                    return ((View.OnLongClickListener) object).onLongClick(view);
+                }
+                return false;
+            }
+        });
+
+        return view;
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -82,11 +111,23 @@ public class PGRecordsFragment extends PreferenceFragment {
             this.mRecords = records;
             final PreferenceScreen
                     preferenceScreen = getPreferenceScreen();
+            preferenceScreen.setOrderingAsAdded(true);
             preferenceScreen.removeAll();
             for (final MDLUser user : records) {
                 final PGListItemRecord
                         item = new PGListItemRecord(getActivity(), user);
-                preferenceScreen.setOrderingAsAdded(true);
+                item.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        return onRecordPressed((PGListItemRecord) preference);
+                    }
+                });
+                item.setOnPreferenceLongClickListener(new PGListItemRecord.OnPreferenceLongClickListener() {
+                    @Override
+                    public boolean onPreferenceLongClick(Preference preference) {
+                        return onRecordLongPressed((PGListItemRecord) preference);
+                    }
+                });
                 preferenceScreen.addPreference(item);
             }
         }
@@ -95,5 +136,14 @@ public class PGRecordsFragment extends PreferenceFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_pg_records, menu);
+    }
+
+    protected boolean onRecordPressed(PGListItemRecord item) {
+
+        return true;
+    }
+
+    protected boolean onRecordLongPressed(PGListItemRecord item) {
+        return true;
     }
 }
