@@ -9,10 +9,13 @@
         </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Database">
+        android:key="@string/group_database"
+        android:title="@string/group_database"
+        >
 
         <PreferenceScreen
-            android:title="Playground"
+            android:key="@string/item_playground"
+            android:title="@string/item_playground"
             />
 
         </PreferenceCategory>

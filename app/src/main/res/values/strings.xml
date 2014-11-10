@@ -2,7 +2,15 @@
 <resources>
 
     <string name="app_name">NimbusBase Tutorial</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
     <string name="group_servers">Servers</string>
+    <string name="group_database">Database</string>
+    <string name="item_playground">Playground</string>
+
+    <string name="auth_state_out">Out</string>
+    <string name="auth_state_in">In</string>
+    <string name="auth_state_signing_in">Signing in</string>
+    <string name="auth_state_signing_out">Signing out</string>
+
 </resources>

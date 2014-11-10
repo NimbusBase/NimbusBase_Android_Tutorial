@@ -1,5 +1,6 @@
 package com.nimbusbase.nimbusbase_android_tutorial;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -14,9 +15,13 @@ import android.view.ViewGroup;
  */
 public class IndexFragment extends PreferenceFragment {
 
+    protected PreferenceScreen
+        mPreferenceScreen;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -27,16 +32,24 @@ public class IndexFragment extends PreferenceFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (mPreferenceScreen == null) {
+            this.mPreferenceScreen = initiatePreferenceScreen();
+        }
+   }
+
+    protected PreferenceScreen initiatePreferenceScreen() {
         addPreferencesFromResource(R.xml.fragment_index);
         final PreferenceScreen
                 preferenceScreen = getPreferenceScreen();
+
         final PreferenceCategory
-                serverCate = (PreferenceCategory) preferenceScreen.findPreference(getString(R.string.group_servers));
+                serverCate = getServerCategory(preferenceScreen);
         serverCate.setOrderingAsAdded(true);
         for (final String server : new String[]{"Dropbox", "Box"}) {
             final ListItemServer
                     item = new ListItemServer(getActivity(), server);
-            serverCate.addPreference(item);
+            item.setSummary(R.string.auth_state_out);
             item.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -44,7 +57,21 @@ public class IndexFragment extends PreferenceFragment {
                     return false;
                 }
             });
+            serverCate.addPreference(item);
         }
+
+        final PreferenceCategory
+                databaseCate = getDatabaseCategory(preferenceScreen);
+        final PreferenceScreen
+                playgroundItem = (PreferenceScreen) databaseCate.findPreference(getString(R.string.item_playground));
+        playgroundItem.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                return onPlaygroundItemClick(preference);
+            }
+        });
+
+        return preferenceScreen;
     }
 
     protected void onServerItemStateChange(ListItemServer item, Boolean newValue) {
@@ -60,9 +87,9 @@ public class IndexFragment extends PreferenceFragment {
         }
     }
 
-    protected void onServerStateChange(String server, int index, int newValue) {
+    protected void onServerStateChange(String server, int index, int authState, boolean initialized) {
         final ListItemServer
-                item = (ListItemServer) getServerCategory().getPreference(index);
+                item = (ListItemServer) getServerCategory(getPreferenceScreen()).getPreference(index);
         if (true) {
             item.setChecked(true);
         }
@@ -71,7 +98,23 @@ public class IndexFragment extends PreferenceFragment {
         }
     }
 
-    private PreferenceCategory getServerCategory() {
-        return (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.group_servers));
+    protected boolean onPlaygroundItemClick(Preference item) {
+        final PGRecordsFragment
+                fragment = PGRecordsFragment.newInstance("User");
+        getFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(android.R.id.content, fragment)
+                .addToBackStack(null)
+                .commit();
+        return true;
+    }
+
+    private PreferenceCategory getServerCategory(PreferenceScreen preferenceScreen) {
+        return (PreferenceCategory) preferenceScreen.findPreference(getString(R.string.group_servers));
+    }
+
+    private PreferenceCategory getDatabaseCategory(PreferenceScreen preferenceScreen) {
+        return (PreferenceCategory) preferenceScreen.findPreference(getString(R.string.group_database));
     }
 }
