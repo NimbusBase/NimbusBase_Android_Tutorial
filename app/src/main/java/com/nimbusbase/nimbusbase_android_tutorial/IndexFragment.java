@@ -1,7 +1,5 @@
 package com.nimbusbase.nimbusbase_android_tutorial;
 
-import android.app.ListFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -10,15 +8,6 @@ import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Will on 11/7/14.
@@ -59,6 +48,30 @@ public class IndexFragment extends PreferenceFragment {
     }
 
     protected void onServerItemStateChange(ListItemServer item, Boolean newValue) {
+        final int
+                index = item.getOrder();
+        final String
+                server = null;
+        if (newValue) {
 
+        }
+        else {
+
+        }
+    }
+
+    protected void onServerStateChange(String server, int index, int newValue) {
+        final ListItemServer
+                item = (ListItemServer) getServerCategory().getPreference(index);
+        if (true) {
+            item.setChecked(true);
+        }
+        else if (true) {
+            item.setChecked(false);
+        }
+    }
+
+    private PreferenceCategory getServerCategory() {
+        return (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.group_servers));
     }
 }
