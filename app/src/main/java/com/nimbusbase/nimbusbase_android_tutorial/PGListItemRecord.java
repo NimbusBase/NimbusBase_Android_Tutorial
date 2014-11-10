@@ -8,10 +8,19 @@ import android.view.View;
  * Created by Will on 11/10/14.
  */
 public class PGListItemRecord extends Preference {
+
+    protected final PGRecord
+            mRecord;
+
     public PGListItemRecord(Context context, PGRecord record) {
         super(context);
+        this.mRecord = record;
         setTitle(record.getTitle());
         setSummary(record.getSummary());
+    }
+
+    public PGRecord getRecord() {
+        return mRecord;
     }
 /*
     protected OnPreferenceLongClickListener

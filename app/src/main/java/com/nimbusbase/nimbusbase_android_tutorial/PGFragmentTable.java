@@ -1,6 +1,7 @@
 package com.nimbusbase.nimbusbase_android_tutorial;
 
 import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -61,8 +62,9 @@ public class PGFragmentTable extends PreferenceFragment {
 
         this.mSQLiteOpenHelper = new MDLDatabaseManager(getActivity());
 
-        addPreferencesFromResource(R.xml.fragment_pg_records);
-
+        final PreferenceScreen
+                preferenceScreen = getPreferenceManager().createPreferenceScreen(getActivity());
+        setPreferenceScreen(preferenceScreen);
 
         final SQLiteDatabase
                 db = mSQLiteOpenHelper.getWritableDatabase();
@@ -173,21 +175,32 @@ public class PGFragmentTable extends PreferenceFragment {
     }
 
     protected boolean onRecordPressed(PGListItemRecord item) {
-
+        final MDLUser
+                user = (MDLUser) item.getRecord();
+        final PGFragmentRecord
+                fragment = PGFragmentRecord.newInstance(mTableName, user.id);
+        getFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(android.R.id.content, fragment)
+                .addToBackStack(null)
+                .commit();
         return true;
     }
 
     protected boolean onRecordDelete(PGListItemRecord item) {
         final MDLUser
-                user = mRecords.get(item.getOrder());
+                user = (MDLUser) item.getRecord();
         final SQLiteDatabase
                 database = mSQLiteOpenHelper.getWritableDatabase();
         final boolean
                 deleted = user.delete(database);
         database.close();
 
-        if (deleted)
+        if (deleted) {
+            mRecords.remove(user);
             getPreferenceScreen().removePreference(item);
+        }
 
         return true;
     }
