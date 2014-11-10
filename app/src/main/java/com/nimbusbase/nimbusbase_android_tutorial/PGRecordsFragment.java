@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,6 +35,9 @@ public class PGRecordsFragment extends PreferenceFragment {
             mSQLiteOpenHelper;
     protected List<MDLUser>
             mRecords;
+
+    protected ListView
+            mListView;
 
     public static PGRecordsFragment newInstance(String tableName) {
         final PGRecordsFragment
@@ -75,6 +80,11 @@ public class PGRecordsFragment extends PreferenceFragment {
                 view = super.onCreateView(inflater, container, savedInstanceState);
         final ListView
                 listView = (ListView) view.findViewById(android.R.id.list);
+        this.mListView = listView;
+
+        registerForContextMenu(listView);
+
+        /*
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,6 +98,7 @@ public class PGRecordsFragment extends PreferenceFragment {
                 return false;
             }
         });
+        */
 
         return view;
     }
@@ -99,7 +110,7 @@ public class PGRecordsFragment extends PreferenceFragment {
         final ActionBar
             actionBar = getActivity().getActionBar();
         if (actionBar != null)
-            actionBar.setTitle(mTableName + " records");
+            actionBar.setTitle("Table" + mTableName);
 
         final SQLiteDatabase
                 database = mSQLiteOpenHelper.getReadableDatabase();
@@ -122,12 +133,14 @@ public class PGRecordsFragment extends PreferenceFragment {
                         return onRecordPressed((PGListItemRecord) preference);
                     }
                 });
+                /*
                 item.setOnPreferenceLongClickListener(new PGListItemRecord.OnPreferenceLongClickListener() {
                     @Override
                     public boolean onPreferenceLongClick(Preference preference) {
                         return onRecordLongPressed((PGListItemRecord) preference);
                     }
                 });
+                */
                 preferenceScreen.addPreference(item);
             }
         }
@@ -138,12 +151,45 @@ public class PGRecordsFragment extends PreferenceFragment {
         inflater.inflate(R.menu.menu_pg_records, menu);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (mListView != null) {
+            final AdapterView.AdapterContextMenuInfo
+                    info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            final PGListItemRecord
+                    item = (PGListItemRecord) getPreferenceScreen().getPreference(info.position);
+            menu.setHeaderTitle(item.getTitle());
+            menu.add(Menu.NONE, 0, 0, R.string.action_delete);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterView.AdapterContextMenuInfo
+                info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final PGListItemRecord
+                recordItem = (PGListItemRecord) getPreferenceScreen().getPreference(info.position);
+        onRecordDelete(recordItem);
+        return true;
+    }
+
     protected boolean onRecordPressed(PGListItemRecord item) {
 
         return true;
     }
 
-    protected boolean onRecordLongPressed(PGListItemRecord item) {
+    protected boolean onRecordDelete(PGListItemRecord item) {
+        final MDLUser
+                user = mRecords.get(item.getOrder());
+        final SQLiteDatabase
+                database = mSQLiteOpenHelper.getWritableDatabase();
+        final boolean
+                deleted = user.delete(database);
+        database.close();
+
+        if (deleted)
+            getPreferenceScreen().removePreference(item);
+
         return true;
     }
 }

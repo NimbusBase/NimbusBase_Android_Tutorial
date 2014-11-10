@@ -49,7 +49,11 @@ public class MDLUser implements PGRecord {
         this.gender = cursor.getInt(cursor.getColumnIndex(Attribute.gender));
     }
 
-    static List<MDLUser> fetchAll(SQLiteDatabase readableDB) {
+    public boolean delete(SQLiteDatabase writableDB) {
+        return writableDB.delete(getEntityName(), Attribute.id + " == ? ", new String[]{id.toString(),}) > 0;
+    }
+
+    public static List<MDLUser> fetchAll(SQLiteDatabase readableDB) {
         final Cursor
                 cursor = readableDB.query(
                 ENTITY_NAME, null, null, null, null, null, null

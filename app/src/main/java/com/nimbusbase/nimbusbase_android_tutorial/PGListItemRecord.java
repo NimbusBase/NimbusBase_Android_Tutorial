@@ -7,13 +7,13 @@ import android.view.View;
 /**
  * Created by Will on 11/10/14.
  */
-public class PGListItemRecord extends Preference implements View.OnLongClickListener {
+public class PGListItemRecord extends Preference {
     public PGListItemRecord(Context context, PGRecord record) {
         super(context);
         setTitle(record.getTitle());
         setSummary(record.getSummary());
     }
-
+/*
     protected OnPreferenceLongClickListener
             mOnPreferenceLongClickListener;
 
@@ -29,4 +29,5 @@ public class PGListItemRecord extends Preference implements View.OnLongClickList
     public boolean onLongClick(View v) {
         return mOnPreferenceLongClickListener != null && mOnPreferenceLongClickListener.onPreferenceLongClick(this);
     }
+    */
 }
