@@ -5,7 +5,10 @@ package com.nimbusbase.nimbusbase_android_tutorial;
  */
 public class UIListViewSeparatorItem extends UIListViewItem {
 
-    public UIListViewSeparatorItem(String title) {
+    public final String
+            title;
 
+    public UIListViewSeparatorItem(String title) {
+        this.title = title;
     }
 }

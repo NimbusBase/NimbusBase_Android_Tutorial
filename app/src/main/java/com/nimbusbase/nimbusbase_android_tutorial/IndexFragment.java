@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +77,7 @@ public class IndexFragment extends ListFragment {
 
 
         IndexListAdapter(Context context, String[] servers) {
-            super(context, android.R.layout.simple_selectable_list_item);
+            super(context, android.R.layout.simple_list_item_1);
 
             mRangeServerMin = 1;
             mRangeServerMax = mRangeServerMin += servers.length;
@@ -101,7 +104,13 @@ public class IndexFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return super.getView(position, convertView, parent);
+            final View
+                    itemView = convertView != null ? convertView :
+                    View.inflate(getActivity(), R.layout.list_item_normal, parent);
+
+
+
+            return itemView;
         }
 
         @Override
@@ -117,6 +126,24 @@ public class IndexFragment extends ListFragment {
         @Override
         public int getViewTypeCount() {
             return 3;
+        }
+
+        private void bindServerData(UIListViewServerItem item, View view) {
+            if (item == null) return;
+            if (view == null) return;
+
+            final TextView
+                    titleView = (TextView) view.findViewById(R.id.title);
+            titleView.setText(item.name);
+        }
+
+        private void bindHeaderData(UIListViewSeparatorItem item, View view) {
+            if (item == null) return;
+            if (view == null) return;
+
+            final TextView
+                    titleView = (TextView) view.findViewById(R.id.title);
+            titleView.setText(item.title);
         }
     }
 }
