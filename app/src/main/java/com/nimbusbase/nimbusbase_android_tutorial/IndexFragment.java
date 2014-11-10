@@ -15,13 +15,12 @@ import android.view.ViewGroup;
  */
 public class IndexFragment extends PreferenceFragment {
 
-    protected PreferenceScreen
-        mPreferenceScreen;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        initiatePreferenceScreen(R.xml.fragment_index);
     }
 
     @Override
@@ -32,14 +31,10 @@ public class IndexFragment extends PreferenceFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (mPreferenceScreen == null) {
-            this.mPreferenceScreen = initiatePreferenceScreen();
-        }
    }
 
-    protected PreferenceScreen initiatePreferenceScreen() {
-        addPreferencesFromResource(R.xml.fragment_index);
+    protected PreferenceScreen initiatePreferenceScreen(int preferencesResID) {
+        addPreferencesFromResource(preferencesResID);
         final PreferenceScreen
                 preferenceScreen = getPreferenceScreen();
 
@@ -100,7 +95,7 @@ public class IndexFragment extends PreferenceFragment {
 
     protected boolean onPlaygroundItemClick(Preference item) {
         final PGRecordsFragment
-                fragment = PGRecordsFragment.newInstance("User");
+                fragment = PGRecordsFragment.newInstance(MDLUser.ENTITY_NAME);
         getFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
