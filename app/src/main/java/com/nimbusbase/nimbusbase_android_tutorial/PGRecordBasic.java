@@ -65,11 +65,21 @@ public class PGRecordBasic implements PGRecord {
 
     @Override
     public String getTitle() {
-        return null;
+        final String[]
+                possibleKeys = {"title", "name"};
+        String title = null;
+        for (final String key : possibleKeys) {
+            Object value = mValuesByAttrName.get(key);
+            if (value != null) {
+                title = value.toString();
+                break;
+            }
+        }
+        return title != null ? title : toString();
     }
 
     @Override
     public String getSummary() {
-        return null;
+        return toString();
     }
 }

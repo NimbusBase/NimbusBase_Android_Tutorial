@@ -3,6 +3,7 @@ package com.nimbusbase.nimbusbase_android_tutorial;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -112,7 +114,7 @@ public class PGFragmentTable extends PreferenceFragment {
         final ActionBar
             actionBar = getActivity().getActionBar();
         if (actionBar != null)
-            actionBar.setTitle("Table" + mTableName);
+            actionBar.setTitle("Table " + mTableName);
 
         final SQLiteDatabase
                 database = mSQLiteOpenHelper.getReadableDatabase();
@@ -170,8 +172,15 @@ public class PGFragmentTable extends PreferenceFragment {
     protected boolean onRecordPressed(PGListItemRecord item) {
         final MDLUser
                 user = (MDLUser) item.getRecord();
+        final HashMap<String, Integer>
+                attrTypesByName = new HashMap<String, Integer>(4) {{
+            put(MDLUser.Attribute.name, Cursor.FIELD_TYPE_STRING);
+            put(MDLUser.Attribute.email, Cursor.FIELD_TYPE_STRING);
+            put(MDLUser.Attribute.age, Cursor.FIELD_TYPE_INTEGER);
+            put(MDLUser.Attribute.gender, Cursor.FIELD_TYPE_INTEGER);
+        }};
         final PGFragmentRecord
-                fragment = PGFragmentRecord.newInstance(mTableName, user.id);
+                fragment = PGFragmentRecord.newInstance(mTableName, user.id, attrTypesByName);
         getFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
