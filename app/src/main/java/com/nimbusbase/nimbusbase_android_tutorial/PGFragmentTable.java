@@ -179,8 +179,8 @@ public class PGFragmentTable extends PreferenceFragment {
             put(MDLUser.Attribute.age, Cursor.FIELD_TYPE_INTEGER);
             put(MDLUser.Attribute.gender, Cursor.FIELD_TYPE_INTEGER);
         }};
-        final PGFragmentRecord
-                fragment = PGFragmentRecord.newInstance(mTableName, user.id, attrTypesByName);
+        final PGFragmentRecordExist
+                fragment = PGFragmentRecordExist.newInstance(mTableName, user.id, attrTypesByName);
         getFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
