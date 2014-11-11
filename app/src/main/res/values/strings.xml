@@ -16,5 +16,7 @@
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
     <string name="action_update">Update</string>
+    <string name="value_type_string">String</string>
+    <string name="value_type_integer">Integer</string>
 
 </resources>

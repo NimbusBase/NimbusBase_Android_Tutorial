@@ -2,11 +2,13 @@ package com.nimbusbase.nimbusbase_android_tutorial;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -158,13 +160,13 @@ public class PGFragmentRecord extends PreferenceFragment {
             PGListItemAttribute attrItem = null;
             switch (type) {
                 case Cursor.FIELD_TYPE_STRING:
-                    attrItem = new PGListIntegerString(context, attrName, (String) value);
+                    attrItem = new PGListItemString(context, attrName, (String) value);
                     break;
                 case Cursor.FIELD_TYPE_BLOB:    // rare case: blob values in non blob column
                     attrItem = new PGListItemBlob(context, attrName, (byte[]) value);
                     break;
                 case Cursor.FIELD_TYPE_INTEGER:
-                    attrItem = new PGListItemInteger(context, attrName, (Integer) value);
+                    attrItem = new PGListItemInteger(context, attrName, (Long) value);
                     break;
                 case Cursor.FIELD_TYPE_FLOAT:
                     attrItem = new PGListItemFloat(context, attrName, (Float) value);
@@ -175,19 +177,48 @@ public class PGFragmentRecord extends PreferenceFragment {
                     break;
             }
 
-            category.addPreference(attrItem);
+            if (attrItem != null) {
+                attrItem.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        final PGListItemAttribute
+                                attrItem = (PGListItemAttribute) preference;
+                        final boolean
+                                valid = validateValueOfAttributeName(attrItem.getAttributeName(), newValue);
+                        if (valid)
+                            preference.setTitle(newValue.toString());
+                        return valid;
+                    }
+                });
+                category.addPreference(attrItem);
+            }
         }
     }
 
     protected boolean onEditingStateChanged(boolean editing) {
         if (editing) {
-            for (final PGListItemAttribute item : getAllAttributeItems()) {
-
+            final List<PGListItemAttribute>
+                    attrItems = getAllAttributeItems();
+            for (final PGListItemAttribute item : attrItems) {
+                item.setEnabled(true);
+                item.setSelectable(true);
             }
 
             return true;
         }
         else {
+            final List<PGListItemAttribute>
+                    attrItems = getAllAttributeItems();
+
+            final ContentValues
+                    contentValues = contentValuesFromAttributeItems(attrItems);
+            if (!updateRecord(contentValues))
+                return false;
+
+            for (final PGListItemAttribute item : getAllAttributeItems()) {
+                item.setEnabled(false);
+                item.setSelectable(false);
+            }
 
             return true;
         }
@@ -207,5 +238,52 @@ public class PGFragmentRecord extends PreferenceFragment {
         }
 
         return items;
+    }
+
+    protected ContentValues contentValuesFromAttributeItems(List<PGListItemAttribute> attributeItems) {
+        final ContentValues
+                contentValues = new ContentValues(attributeItems.size());
+        for (final PGListItemAttribute item : getAllAttributeItems()) {
+            final String
+                    attrName = item.getAttributeName();
+            final String
+                    value = item.getText();
+            final int
+                    type = mAttrTypesByName.get(attrName);
+
+            try {
+                switch (type) {
+                    case Cursor.FIELD_TYPE_STRING:
+                        contentValues.put(attrName, value);
+                        break;
+                    case Cursor.FIELD_TYPE_INTEGER:
+                        contentValues.put(attrName, Integer.valueOf(value));
+                        break;
+                    case Cursor.FIELD_TYPE_FLOAT:
+                        contentValues.put(attrName, Float.valueOf(value));
+                        break;
+                }
+            }
+            catch (Exception ignored) {
+            }
+        }
+
+        return contentValues;
+    }
+
+    protected boolean updateRecord(ContentValues contentValues) {
+        final SQLiteDatabase
+                database = mSQLiteOpenHelper.getWritableDatabase();
+
+        boolean success =
+                database.update(mTableName, contentValues, "_ROWID_ == ?", new String[]{mRecordID.toString(),}) > 0;
+
+        database.close();
+
+        return success;
+    }
+
+    protected boolean validateValueOfAttributeName(String attrName, Object value) {
+        return true;
     }
 }
