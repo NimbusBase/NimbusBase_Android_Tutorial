@@ -32,18 +32,6 @@ public class PGFragmentRecord extends PreferenceFragment {
     protected SQLiteOpenHelper
             mSQLiteOpenHelper;
 
-    public static PGFragmentRecordExist newInstance(String tableName, HashMap<String, Integer> attrTypesByName) {
-        final PGFragmentRecordExist
-                fragment = new PGFragmentRecordExist();
-        final Bundle
-                bundle = new Bundle();
-        bundle.putString(sTableNameKey, tableName);
-        bundle.putSerializable(sAttrTypesByNameKey, attrTypesByName);
-        fragment.setArguments(bundle);
-
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

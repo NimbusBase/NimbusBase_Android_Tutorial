@@ -68,14 +68,6 @@ public class PGFragmentTable extends PreferenceFragment {
                 preferenceScreen = getPreferenceManager().createPreferenceScreen(getActivity());
         setPreferenceScreen(preferenceScreen);
         preferenceScreen.setOrderingAsAdded(true);
-
-        final SQLiteDatabase
-                db = mSQLiteOpenHelper.getWritableDatabase();
-        final ContentValues
-                contentValues = new ContentValues();
-        contentValues.put("name", "William");
-        contentValues.put("email", "william@nimbusbase.com");
-        db.insert("User", null, contentValues);
     }
 
     @Override
@@ -148,6 +140,16 @@ public class PGFragmentTable extends PreferenceFragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (R.id.action_insert_new_record == item.getItemId()) {
+            onInsertButtonClick(item);
+            return true;
+        }
+        else
+            return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (mListView != null) {
             final AdapterView.AdapterContextMenuInfo
@@ -172,15 +174,8 @@ public class PGFragmentTable extends PreferenceFragment {
     protected boolean onRecordPressed(PGListItemRecord item) {
         final MDLUser
                 user = (MDLUser) item.getRecord();
-        final HashMap<String, Integer>
-                attrTypesByName = new HashMap<String, Integer>(4) {{
-            put(MDLUser.Attribute.name, Cursor.FIELD_TYPE_STRING);
-            put(MDLUser.Attribute.email, Cursor.FIELD_TYPE_STRING);
-            put(MDLUser.Attribute.age, Cursor.FIELD_TYPE_INTEGER);
-            put(MDLUser.Attribute.gender, Cursor.FIELD_TYPE_INTEGER);
-        }};
         final PGFragmentRecordExist
-                fragment = PGFragmentRecordExist.newInstance(mTableName, user.id, attrTypesByName);
+                fragment = PGFragmentRecordExist.newInstance(mTableName, user.id, MDLUser.ATTRIBUTE_TYPE_BY_NAME);
         getFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -205,6 +200,17 @@ public class PGFragmentTable extends PreferenceFragment {
         }
 
         return true;
+    }
+
+    protected void onInsertButtonClick(MenuItem menuItem) {
+        final PGFragmentRecordNew
+                fragment = PGFragmentRecordNew.newInstance(mTableName, MDLUser.ATTRIBUTE_TYPE_BY_NAME);
+        getFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(android.R.id.content, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     protected void reload(List<? extends PGRecord> records) {

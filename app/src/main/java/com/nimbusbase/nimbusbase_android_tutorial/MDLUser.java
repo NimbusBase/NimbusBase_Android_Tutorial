@@ -4,7 +4,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Will on 11/10/14.
@@ -37,6 +39,13 @@ public class MDLUser implements PGRecord {
             + Attribute.age + " INTEGER, "
             + Attribute.gender + " TINYINT "
             + " ); ";
+    public static final HashMap<String, Integer>
+            ATTRIBUTE_TYPE_BY_NAME = new HashMap<String, Integer>(4) {{
+        put(MDLUser.Attribute.name, Cursor.FIELD_TYPE_STRING);
+        put(MDLUser.Attribute.email, Cursor.FIELD_TYPE_STRING);
+        put(MDLUser.Attribute.age, Cursor.FIELD_TYPE_INTEGER);
+        put(MDLUser.Attribute.gender, Cursor.FIELD_TYPE_INTEGER);
+    }};
     public String getEntityName() {
         return ENTITY_NAME;
     }

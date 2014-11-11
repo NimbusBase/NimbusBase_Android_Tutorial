@@ -18,5 +18,6 @@
     <string name="action_update">Update</string>
     <string name="value_type_string">String</string>
     <string name="value_type_integer">Integer</string>
+    <string name="action_save_new_record">Save</string>
 
 </resources>
