@@ -12,6 +12,8 @@ public class PGListItemAttribute extends EditTextPreference {
         setTitle(value == null ? "" : value.toString());
         setDefaultValue(value == null ? null : value.toString());
         setDialogTitle("Input value for attribute '" + name + "'");
-//        setSelectable(false);
+
+        setSelectable(false);
+        setEnabled(false);
     }
 }

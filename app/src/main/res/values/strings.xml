@@ -14,5 +14,7 @@
     <string name="auth_state_signing_out">Signing out</string>
     <string name="action_insert">Insert</string>
     <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_update">Update</string>
 
 </resources>

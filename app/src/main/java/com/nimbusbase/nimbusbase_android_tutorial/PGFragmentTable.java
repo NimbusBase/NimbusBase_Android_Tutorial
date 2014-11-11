@@ -144,7 +144,7 @@ public class PGFragmentTable extends PreferenceFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_pg_records, menu);
+        inflater.inflate(R.menu.pg_menu_table, menu);
     }
 
     @Override

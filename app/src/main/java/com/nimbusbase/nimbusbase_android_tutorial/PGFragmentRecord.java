@@ -10,9 +10,14 @@ import android.os.Bundle;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +43,9 @@ public class PGFragmentRecord extends PreferenceFragment {
     protected SQLiteOpenHelper
             mSQLiteOpenHelper;
 
+    protected boolean
+            mEditing;
+
     public static PGFragmentRecord newInstance(String tableName, Long recordID, HashMap<String, Integer> attrTypesByName) {
         final PGFragmentRecord
                 fragment = new PGFragmentRecord();
@@ -55,6 +63,7 @@ public class PGFragmentRecord extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
 
         final Bundle
                 bundle = getArguments();
@@ -102,6 +111,27 @@ public class PGFragmentRecord extends PreferenceFragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.pg_menu_record, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (R.id.action_edit == item.getItemId()) {
+            final boolean
+                    targetValue = !mEditing,
+                    success = onEditingStateChanged(targetValue);
+            if (success) {
+                this.mEditing = targetValue;
+                item.setTitle(targetValue ? R.string.action_update : R.string.action_edit);
+            }
+            return true;
+        }
+        else
+            return super.onOptionsItemSelected(item);
+    }
+
     protected void reload(PGRecordBasic record) {
         final PreferenceScreen
                 preferenceScreen = getPreferenceScreen();
@@ -147,5 +177,35 @@ public class PGFragmentRecord extends PreferenceFragment {
 
             category.addPreference(attrItem);
         }
+    }
+
+    protected boolean onEditingStateChanged(boolean editing) {
+        if (editing) {
+            for (final PGListItemAttribute item : getAllAttributeItems()) {
+
+            }
+
+            return true;
+        }
+        else {
+
+            return true;
+        }
+    }
+
+    protected List<PGListItemAttribute> getAllAttributeItems() {
+        final PreferenceScreen
+                root = getPreferenceScreen();
+        List<PGListItemAttribute>
+                items = new ArrayList<PGListItemAttribute>(mAttrTypesByName.size());
+        for (int index = 0; index < root.getPreferenceCount(); index++) {
+            final PreferenceCategory
+                    category = (PreferenceCategory) root.getPreference(index);
+            final PGListItemAttribute
+                    item = (PGListItemAttribute) category.getPreference(0);
+            items.add(item);
+        }
+
+        return items;
     }
 }
