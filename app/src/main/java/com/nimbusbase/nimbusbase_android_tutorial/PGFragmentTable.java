@@ -2,8 +2,6 @@ package com.nimbusbase.nimbusbase_android_tutorial;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -79,22 +76,6 @@ public class PGFragmentTable extends PreferenceFragment {
         this.mListView = listView;
 
         registerForContextMenu(listView);
-
-        /*
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final ListAdapter
-                        listAdapter = ((ListView) parent).getAdapter();
-                final Object
-                        object = listAdapter.getItem(position);
-                if (object != null && object instanceof View.OnLongClickListener) {
-                    return ((View.OnLongClickListener) object).onLongClick(view);
-                }
-                return false;
-            }
-        });
-        */
 
         return view;
     }
