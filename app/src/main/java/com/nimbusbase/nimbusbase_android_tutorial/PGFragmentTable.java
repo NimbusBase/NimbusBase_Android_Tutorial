@@ -65,6 +65,7 @@ public class PGFragmentTable extends PreferenceFragment {
         final PreferenceScreen
                 preferenceScreen = getPreferenceManager().createPreferenceScreen(getActivity());
         setPreferenceScreen(preferenceScreen);
+        preferenceScreen.setOrderingAsAdded(true);
 
         final SQLiteDatabase
                 db = mSQLiteOpenHelper.getWritableDatabase();
@@ -121,9 +122,9 @@ public class PGFragmentTable extends PreferenceFragment {
 
         if (!records.equals(mRecords)) {
             this.mRecords = records;
+            reload(records);
             final PreferenceScreen
                     preferenceScreen = getPreferenceScreen();
-            preferenceScreen.setOrderingAsAdded(true);
             preferenceScreen.removeAll();
             for (final MDLUser user : records) {
                 final PGListItemRecord
@@ -134,14 +135,6 @@ public class PGFragmentTable extends PreferenceFragment {
                         return onRecordPressed((PGListItemRecord) preference);
                     }
                 });
-                /*
-                item.setOnPreferenceLongClickListener(new PGListItemRecord.OnPreferenceLongClickListener() {
-                    @Override
-                    public boolean onPreferenceLongClick(Preference preference) {
-                        return onRecordLongPressed((PGListItemRecord) preference);
-                    }
-                });
-                */
                 preferenceScreen.addPreference(item);
             }
         }
@@ -203,5 +196,22 @@ public class PGFragmentTable extends PreferenceFragment {
         }
 
         return true;
+    }
+
+    protected void reload(List<? extends PGRecord> records) {
+        final PreferenceScreen
+                preferenceScreen = getPreferenceScreen();
+        preferenceScreen.removeAll();
+        for (final PGRecord user : records) {
+            final PGListItemRecord
+                    item = new PGListItemRecord(getActivity(), user);
+            item.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    return onRecordPressed((PGListItemRecord) preference);
+                }
+            });
+            preferenceScreen.addPreference(item);
+        }
     }
 }
