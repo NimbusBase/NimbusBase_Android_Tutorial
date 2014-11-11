@@ -3,6 +3,7 @@ package com.nimbusbase.nimbusbase_android_tutorial;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Looper;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -10,6 +11,20 @@ import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.nimbusbase.nimbusbase.Base;
+import com.nimbusbase.nimbusbase.Server;
+import com.nimbusbase.nimbusbase.promise.Callback;
+import com.nimbusbase.nimbusbase.promise.Promise;
+import com.nimbusbase.nimbusbase.promise.Response;
+
+import org.apache.http.auth.AuthState;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
+import java.util.logging.Handler;
 
 /**
  * Created by Will on 11/7/14.
@@ -21,7 +36,11 @@ public class IndexFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        initiatePreferenceScreen(R.xml.fragment_index);
+        final Base
+            base = null;
+
+        bindEvents(base);
+        initiatePreferenceScreen(base, R.xml.fragment_index);
     }
 
     @Override
@@ -38,7 +57,42 @@ public class IndexFragment extends PreferenceFragment {
             actionBar.setTitle(R.string.app_name);
    }
 
-    protected PreferenceScreen initiatePreferenceScreen(int preferencesResID) {
+    protected void bindEvents(Base base) {
+        final Server[]
+                servers = base.getServers();
+        for (int index = 0; index < servers.length; index ++) {
+            final Server
+                    server = servers[index];
+            final PropertyChangeSupport
+                    support = server.propertyChangeSupport;
+            final int
+                    innerIndex = index;
+            support.addPropertyChangeListener(
+                    Server.Property.authState,
+                    new PropertyChangeListener() {
+                        @Override
+                        public void propertyChange(PropertyChangeEvent event) {
+                            final Server
+                                    innerServer = (Server) event.getSource();
+                            onServerStateChange(innerServer, innerIndex, (Server.AuthState) event.getNewValue(), innerServer.isInitialized());
+                        }
+                    }
+            );
+            support.addPropertyChangeListener(
+                    Server.Property.isInitialized,
+                    new PropertyChangeListener() {
+                        @Override
+                        public void propertyChange(PropertyChangeEvent event) {
+                            final Server
+                                    innerServer = (Server) event.getSource();
+                            onServerStateChange(innerServer, innerIndex, innerServer.getAuthState(), (Boolean) event.getNewValue());
+                        }
+                    }
+            );
+        }
+    }
+
+    protected PreferenceScreen initiatePreferenceScreen(Base base, int preferencesResID) {
         addPreferencesFromResource(preferencesResID);
         final PreferenceScreen
                 preferenceScreen = getPreferenceScreen();
@@ -46,7 +100,8 @@ public class IndexFragment extends PreferenceFragment {
         final PreferenceCategory
                 serverCate = getServerCategory(preferenceScreen);
         serverCate.setOrderingAsAdded(true);
-        for (final String server : new String[]{"Dropbox", "Box"}) {
+
+        for (final Server server : base.getServers()) {
             final ListItemServer
                     item = new ListItemServer(getActivity(), server);
             item.setSummary(R.string.auth_state_out);
@@ -55,6 +110,13 @@ public class IndexFragment extends PreferenceFragment {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     onServerItemStateChange((ListItemServer) preference, (Boolean) newValue);
                     return false;
+                }
+            });
+            item.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    onServerItemClick((ListItemServer) preference);
+                    return true;
                 }
             });
             serverCate.addPreference(item);
@@ -74,28 +136,70 @@ public class IndexFragment extends PreferenceFragment {
         return preferenceScreen;
     }
 
-    protected void onServerItemStateChange(ListItemServer item, Boolean newValue) {
-        final int
-                index = item.getOrder();
-        final String
-                server = null;
-        if (newValue) {
-
+    protected void onServerItemClick(ListItemServer item) {
+        final Server
+                server = item.getServer();
+        if (server.isSynchronizing()) {
+            server.getRunningSync().cancel();
         }
-        else {
-
+        else if (server.canSynchronize()) {
+            startSyncOnServer(server);
         }
     }
 
-    protected void onServerStateChange(String server, int index, int authState, boolean initialized) {
+    protected void onServerItemStateChange(ListItemServer item, Boolean newValue) {
+        final Server
+                server = item.getServer();
+        final Server.AuthState
+                authState = server.getAuthState();
+        if (newValue && Server.AuthState.Out == authState) {
+            server.authorize(getActivity());
+        }
+        else if (!newValue && Server.AuthState.In == authState) {
+            server.signOut();
+        }
+    }
+
+    protected void onServerStateChange(Server server, int index, Server.AuthState authState, boolean initialized) {
         final ListItemServer
                 item = (ListItemServer) getServerCategory(getPreferenceScreen()).getPreference(index);
-        if (true) {
+        if (Server.AuthState.In == authState) {
             item.setChecked(true);
         }
-        else if (true) {
+        else if (Server.AuthState.Out == authState) {
             item.setChecked(false);
         }
+    }
+
+    protected void startSyncOnServer(Server server) {
+        final Base
+                base = null;
+        final int
+                index = Arrays.asList(base.getServers()).indexOf(server);
+
+        final Promise
+                promise = server.synchronize(null);
+        promise
+                .onProgress(new Callback.ProgressListener() {
+                    @Override
+                    public void onProgress(double v) {
+                        onServerSyncProgress(index, (float) v);
+                    }
+                })
+                .onAlways(new Callback.AlwaysListener() {
+                    @Override
+                    public void onAlways(Response response) {
+                        onServerSyncEnd(index, response);
+                    }
+                });
+    }
+
+    protected void onServerSyncEnd(int index, Response response) {
+
+    }
+
+    protected void onServerSyncProgress(int index, float progress) {
+
     }
 
     protected boolean onPlaygroundItemClick(Preference item) {
