@@ -16,6 +16,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Singleton.CONTEXT = getApplicationContext();
+        Singleton.base();
+
         final FragmentManager
                 fragmentManager = this.getFragmentManager();
 

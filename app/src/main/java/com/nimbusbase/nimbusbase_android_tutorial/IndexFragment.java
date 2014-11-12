@@ -275,6 +275,6 @@ public class IndexFragment extends PreferenceFragment {
     }
 
     private static Base getBase() {
-        return null;
+        return Singleton.base();
     }
 }
