@@ -3,7 +3,6 @@ package com.nimbusbase.nimbusbase_android_tutorial;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.os.Looper;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -11,25 +10,39 @@ import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.nimbusbase.nimbusbase.Base;
 import com.nimbusbase.nimbusbase.Server;
 import com.nimbusbase.nimbusbase.promise.Callback;
+import com.nimbusbase.nimbusbase.promise.NMBError;
 import com.nimbusbase.nimbusbase.promise.Promise;
 import com.nimbusbase.nimbusbase.promise.Response;
-
-import org.apache.http.auth.AuthState;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
-import java.util.logging.Handler;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Will on 11/7/14.
  */
 public class IndexFragment extends PreferenceFragment {
+
+    private static final Map<Server.AuthState, String>
+            sAuthStateText = new HashMap<Server.AuthState, String>(4) {{
+        put(Server.AuthState.In, "In");
+        put(Server.AuthState.Out, "Out");
+        put(Server.AuthState.SigningIn, "Signing in");
+        put(Server.AuthState.SigningOut, "Signing out");
+    }};
+    private static final Map<Boolean, String>
+            sInitStateText = new HashMap<Boolean, String>(2) {{
+        put(true, "Initialized");
+        put(false, "Initializing");
+    }};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,8 +50,7 @@ public class IndexFragment extends PreferenceFragment {
         setRetainInstance(true);
 
         final Base
-            base = null;
-
+            base = getBase();
         bindEvents(base);
         initiatePreferenceScreen(base, R.xml.fragment_index);
     }
@@ -74,7 +86,7 @@ public class IndexFragment extends PreferenceFragment {
                         public void propertyChange(PropertyChangeEvent event) {
                             final Server
                                     innerServer = (Server) event.getSource();
-                            onServerStateChange(innerServer, innerIndex, (Server.AuthState) event.getNewValue(), innerServer.isInitialized());
+                            onServerStateChange(innerServer, innerIndex);
                         }
                     }
             );
@@ -85,7 +97,7 @@ public class IndexFragment extends PreferenceFragment {
                         public void propertyChange(PropertyChangeEvent event) {
                             final Server
                                     innerServer = (Server) event.getSource();
-                            onServerStateChange(innerServer, innerIndex, innerServer.getAuthState(), (Boolean) event.getNewValue());
+                            onServerStateChange(innerServer, innerIndex);
                         }
                     }
             );
@@ -101,10 +113,16 @@ public class IndexFragment extends PreferenceFragment {
                 serverCate = getServerCategory(preferenceScreen);
         serverCate.setOrderingAsAdded(true);
 
-        for (final Server server : base.getServers()) {
+        final Server[]
+                servers =  base.getServers();
+        for (int index = 0; index < servers.length; index++) {
+            final Server
+                    server = servers[index];
+
             final ListItemServer
                     item = new ListItemServer(getActivity(), server);
-            item.setSummary(R.string.auth_state_out);
+            onServerStateChange(server, index);
+
             item.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -143,7 +161,9 @@ public class IndexFragment extends PreferenceFragment {
             server.getRunningSync().cancel();
         }
         else if (server.canSynchronize()) {
-            startSyncOnServer(server);
+            final int
+                    index = Arrays.asList(getBase().getServers()).indexOf(server);
+            startSyncOnServer(server, index);
         }
     }
 
@@ -160,46 +180,74 @@ public class IndexFragment extends PreferenceFragment {
         }
     }
 
-    protected void onServerStateChange(Server server, int index, Server.AuthState authState, boolean initialized) {
+    protected void onServerStateChange(Server server, int index) {
+        final Server.AuthState
+                authState = server.getAuthState();
+        final boolean
+                initialized = server.isInitialized();
+        final  boolean
+                syncing = server.isSynchronizing();
+
         final ListItemServer
                 item = (ListItemServer) getServerCategory(getPreferenceScreen()).getPreference(index);
+        if (item == null) return;
+
         if (Server.AuthState.In == authState) {
             item.setChecked(true);
         }
         else if (Server.AuthState.Out == authState) {
             item.setChecked(false);
         }
+
+        if (!syncing) {
+            if (Server.AuthState.In == authState) {
+                item.setSummary(sInitStateText.get(initialized));
+            }
+            else {
+                item.setSummary(sAuthStateText.get(authState));
+            }
+        }
     }
 
-    protected void startSyncOnServer(Server server) {
-        final Base
-                base = null;
-        final int
-                index = Arrays.asList(base.getServers()).indexOf(server);
-
+    protected void startSyncOnServer(final Server server, final int index) {
         final Promise
                 promise = server.synchronize(null);
         promise
                 .onProgress(new Callback.ProgressListener() {
                     @Override
                     public void onProgress(double v) {
-                        onServerSyncProgress(index, (float) v);
+                        onServerSyncProgress(server, index, (float) v);
                     }
                 })
                 .onAlways(new Callback.AlwaysListener() {
                     @Override
                     public void onAlways(Response response) {
-                        onServerSyncEnd(index, response);
+                        onServerSyncEnd(server, index, response);
                     }
                 });
+
+        final ListItemServer
+                item = (ListItemServer) getServerCategory(getPreferenceScreen()).getPreference(index);
+        if (item != null)
+            item.setSummary(summaryForSyncProgress(0.0f));
     }
 
-    protected void onServerSyncEnd(int index, Response response) {
+    protected void onServerSyncEnd(Server server, int index, Response response) {
+        if (!response.isSuccess()) {
+            final NMBError
+                    error = response.error;
+            if (error != null)
+                Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show();
+        }
 
+        onServerStateChange(server, index);     // Reset summary
     }
 
-    protected void onServerSyncProgress(int index, float progress) {
-
+    protected void onServerSyncProgress(Server server, int index, float progress) {
+        final ListItemServer
+                item = (ListItemServer) getServerCategory(getPreferenceScreen()).getPreference(index);
+        if (item != null)
+            item.setSummary(summaryForSyncProgress(progress));
     }
 
     protected boolean onPlaygroundItemClick(Preference item) {
@@ -220,5 +268,13 @@ public class IndexFragment extends PreferenceFragment {
 
     private PreferenceCategory getDatabaseCategory(PreferenceScreen preferenceScreen) {
         return (PreferenceCategory) preferenceScreen.findPreference(getString(R.string.group_database));
+    }
+
+    private static String summaryForSyncProgress(float progress) {
+        return String.format("Synchronizing %3.0f%%", progress * 100);
+    }
+
+    private static Base getBase() {
+        return null;
     }
 }
