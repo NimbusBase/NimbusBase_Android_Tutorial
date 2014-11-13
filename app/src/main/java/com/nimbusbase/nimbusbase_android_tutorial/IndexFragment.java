@@ -121,7 +121,6 @@ public class IndexFragment extends PreferenceFragment {
 
             final ListItemServer
                     item = new ListItemServer(getActivity(), server);
-            onServerStateChange(server, index);
 
             item.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -138,6 +137,8 @@ public class IndexFragment extends PreferenceFragment {
                 }
             });
             serverCate.addPreference(item);
+
+            onServerStateChange(server, index);
         }
 
         final PreferenceCategory

@@ -17,9 +17,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/INDEX.LIST'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile ('com.nimbusbase:nimbusbaseandroid:1.0-SNAPSHOT@aar')
+    compile project(':Libraries:BoxAndroidLibraryV2')
+    compile ('com.nimbusbase:nimbusbaseandroid:1.0-SNAPSHOT@aar') {
+        transitive = true
+        exclude group: 'org.apache.commons', module: 'commons-io'
+    }
 }

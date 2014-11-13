@@ -24,4 +24,8 @@ public class ListItemServer extends SwitchPreference {
     public Server getServer() {
         return mServer;
     }
+
+    @Override
+    protected void onClick() {
+    }
 }

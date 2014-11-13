@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="boxandroidlibv2_alert_dialog_cancel" description="">Cancel</string>
+    <string name="boxandroidlibv2_alert_dialog_ok" description="">Submit</string>
+    <string name="boxandroidlibv2_alert_dialog_password" description="">Password</string>
+    <string name="boxandroidlibv2_alert_dialog_text_entry" description="">This website or application is requesting authentication.</string>
+    <string name="boxandroidlibv2_alert_dialog_username" description="">Username</string>
+    <string name="boxandroidlibv2_title_activity_oauth">OAuthActivity</string>
+    <string name="boxandroidlibv2_Select">Select</string>
+    <string name="boxandroidlibv2_Cancel">Cancel</string>
+    <string name="boxandroidlibv2_Please_wait">Please wait&#8230;</string>
+    <string name="boxandroidlibv2_Problem_fetching_folder">Problem fetching folder.</string>
+    <string name="boxandroidlibv2_Create_folder">Create folder</string>
+    <string name="boxandroidlibv2_Authenticating">Authenticating</string>
+
+    <string name="boxandroidlibv2_ssl_error_warning_DATE_INVALID">The date of the cerficiate is invalid.</string>
+    <string name="boxandroidlibv2_ssl_error_warning_EXPIRED">The certificate has expired.</string>
+    <string name="boxandroidlibv2_ssl_error_warning_ID_MISMATCH">Hostname mismatch.</string>
+    <string name="boxandroidlibv2_ssl_error_warning_INVALID">A generic error occurred.</string>
+    <string name="boxandroidlibv2_ssl_error_warning_NOT_YET_VALID">The cerficate is not yet valid.</string>
+    <string name="boxandroidlibv2_ssl_error_warning_UNTRUSTED">The certificate authority is not trusted.</string>
+    <string name="boxandroidlibv2_ssl_should_not_proceed">You should not proceed, especially if you have never seen this warning before for this site.</string>
+    
+    <string name="boxandroidlibv2_Security_Warning">Security Warning</string>
+    <string name="boxandroidlibv2_There_are_problems_with_the_security_certificate_for_this_site">There are problems with the security certificate for this site.</string>
+    
+    <string name="boxandroidlibv2_Continue">Continue</string>
+    <string name="boxandroidlibv2_Go_back">Go back</string>
+    
+</resources>

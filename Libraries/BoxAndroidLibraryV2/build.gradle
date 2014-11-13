@@ -1,0 +1,125 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+	dependencies {
+		classpath 'com.android.tools.build:gradle:0.12.+'
+	}
+}
+
+apply plugin: "android-library"
+apply plugin: "maven"
+
+archivesBaseName = "box-android-sdk"
+ext.version = "3.0.4-SNAPSHOT"
+ext.versionCode = 304
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+configurations {
+	archives {
+		extendsFrom configurations.default
+	}
+}
+
+dependencies {
+    archives "org.apache.maven.wagon:wagon-ssh:2.2"
+    compile 'com.android.support:support-v4:19.0.1'
+    compile 'net.box:boxjavalibv2:3.0.9'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.2.2'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.2.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.2.2'
+    compile 'commons-codec:commons-codec:1.8'
+    compile 'commons-io:commons-io:2.4'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'org.apache.httpcomponents:httpclient-cache:4.2.5'
+    compile 'org.apache.httpcomponents:httpcore:4.2.4'
+    compile 'org.apache.httpcomponents:httpmime:4.2.5'
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '19.1.0'
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+        versionName project.ext.version
+
+    }
+    sourceSets {
+        main {
+            java.srcDirs = ["src"]
+            manifest.srcFile "AndroidManifest.xml"
+            res.srcDirs = ["res"]
+            resources.srcDirs = ["src"]
+        }
+    }
+    libraryVariants.all { variant ->
+        def suffix = "${variant.mergedFlavor.versionName}"
+        def originalFile = variant.outputFile
+        def name = originalFile.name.replace(archivesBaseName, "${archivesBaseName}-${suffix}")
+        variant.outputFile = new File(originalFile.parent, name)
+    }
+    buildTypes {
+    }
+}
+
+uploadArchives {
+	repositories.mavenDeployer {
+		configuration = configurations.archives
+		pom.groupId = "com.box.android"
+		pom.version = project.ext.version
+
+		pom.project {
+			name "Box Android SDK v2"
+			packaging "aar"
+			description "The Android SDK for the Box API."
+			url "https://github.com/box/box-android-sdk"
+
+			scm {
+				url "scm:git@github.com:box/box-android-sdk.git"
+				connection "scm:git@github.com:box/box-android-sdk.git"
+				developerConnection "scm:git@github.com:box/box-android-sdk.git"
+			}
+
+			licenses {
+				license {
+					name "The Apache Software License, Version 2.0"
+					url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+					distribution "repo"
+				}
+			}
+
+			organization {
+				name "Box"
+				url "http://developers.box.com"
+			}
+
+			developers {
+				developer {
+					id "jianbox"
+					name "Jian Lin"
+					email "jlin@box.com"
+				}
+			}
+		}
+
+		if (project.hasProperty("repoUploadUrl")) {
+			repository(url: repoUploadUrl) {
+				authentication(userName: repoUserName, privateKey: repoKeyFile)
+			}
+		}
+	}
+}
+
+ext.deployerPom = uploadArchives.repositories.mavenDeployer.pom
+
+task installArchives(type: Upload) {
+	repositories.mavenInstaller {
+		configuration = configurations.default
+		pom = deployerPom
+	}
+}
