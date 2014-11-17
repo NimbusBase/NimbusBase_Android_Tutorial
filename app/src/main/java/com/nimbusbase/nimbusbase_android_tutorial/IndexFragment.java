@@ -50,9 +50,17 @@ public class IndexFragment extends PreferenceFragment {
         setRetainInstance(true);
 
         final Base
-            base = getBase();
+                base = getBase();
         bindEvents(base);
         initiatePreferenceScreen(base, R.xml.fragment_index);
+    }
+
+    @Override
+    public void onDestroy() {
+        final Base
+                base = getBase();
+        unbindEvents(base);
+        super.onDestroy();
     }
 
     @Override
@@ -101,6 +109,18 @@ public class IndexFragment extends PreferenceFragment {
                         }
                     }
             );
+        }
+    }
+
+    protected void unbindEvents(Base base) {
+        final Server[]
+                servers = base.getServers();
+        for (final Server server : servers) {
+            final PropertyChangeSupport
+                    support = server.propertyChangeSupport;
+            for (final PropertyChangeListener listener : support.getPropertyChangeListeners()) {
+                support.removePropertyChangeListener(listener);
+            }
         }
     }
 
