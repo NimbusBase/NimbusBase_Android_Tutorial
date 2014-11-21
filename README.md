@@ -13,7 +13,7 @@ To create, retrieve, update and delete new records:
 + **Create**: Tap the **INSERT** button on the right top corner, fill some fields then tap **SAVE**
 + **Retrieve**: The **name** and **email** fields are displayed on the list view. For detail info, just tap an existent record
 + **Update**: Under the detail info mode, tap the **EDIT** button on the right top corner, edit it then tap the **UPDATE** button to confirm the changes
-+ **Delete**: In list view, long press a record untill the **DELETE** button pop up then tap it.
++ **Delete**: In list view, long press a record till the **DELETE** button pop up then tap it.
 
 ![CRUD Table](https://raw.githubusercontent.com/NimbusBase/NimbusBase_Android_Tutorial/EditReadme/Resource/Github/img/CRUD.png)
 
