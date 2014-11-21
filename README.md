@@ -7,7 +7,7 @@ NimbusBase_Android_Tutorial
 
 The app is built base on sqlite and contains only one table named **User**, which you can explore under **Playground**.
 
-![Playground => Table User](https://)
+![Playground to Table User](https://raw.githubusercontent.com/NimbusBase/NimbusBase_Android_Tutorial/EditReadme/Resource/Github/img/index_to_playground.png)
 
 To create, retrieve, update and delete new records:
 + **Create**: Tap the **INSERT** button on the right top corner, fill some fields then tap **SAVE**
