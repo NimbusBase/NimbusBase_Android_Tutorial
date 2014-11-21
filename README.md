@@ -15,14 +15,14 @@ To create, retrieve, update and delete new records:
 + **Update**: Under the detail info mode, tap the **EDIT** button on the right top corner, edit it then tap the **UPDATE** button to confirm the changes
 + **Delete**: In list view, long press a record untill the **DELETE** button pop up then tap it.
 
-![CRUD Table](https://)
+![CRUD Table](https://raw.githubusercontent.com/NimbusBase/NimbusBase_Android_Tutorial/EditReadme/Resource/Github/img/CRUD.png)
 
 To sync your data to cloud
 
 1. Sign in one cloud by tapping the switch on the right
 1. Tap the signed in server to start synchronization
 
-![To sync](https://)
+![To sync](https://raw.githubusercontent.com/NimbusBase/NimbusBase_Android_Tutorial/EditReadme/Resource/Github/img/sync.png)
 
 Then you can check if your data is synced on another Android or iOS device.
 
