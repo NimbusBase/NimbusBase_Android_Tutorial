@@ -38,7 +38,7 @@ Download [NimbusBase_Android_Tutorial.apk](http://nimbusbase.com/download/Nimbus
 1. Uncompress the vender project under directory `/Libraries`
   + `Libraries/BoxAndroidLibraryV2.zip`
   + `Libraries/DropboxClient2.zip`
-1. Build and run
+1. Open the project with [Android Studio](https://developer.android.com/sdk/installing/studio.html), build it and run
 
 ## Relevance
 
