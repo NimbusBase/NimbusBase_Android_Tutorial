@@ -3,8 +3,6 @@ NimbusBase_Android_Tutorial
 
 "NimbusBase Android Tutorial" is a sample NimbusBase app on demonstrating how to sync between Android and iOS device via personal cloud (Dropbox, Box).
 
-Companion project: [NimbusBase iOS Tutorial](https://github.com/NimbusBase/NimbusBase_iOS) 
-
 ## Try this out
 
 The app is built base on sqlite and contains only one table named **User**, which you can explore under **Playground**.
@@ -21,7 +19,7 @@ To create, retrieve, update and delete new records:
 
 To sync your data to cloud
 
-1. Sign in one cloud by tapping the swicht on the right
+1. Sign in one cloud by tapping the switch on the right
 1. Tap the signed in server to start synchronization
 
 ![To sync](https://)
@@ -30,8 +28,18 @@ Then you can check if your data is synced on another Android or iOS device.
 
 ## How to run
 
+### Run directly from .apk
+
+Download [NimbusBase_Android_Tutorial.apk](http://nimbusbase.com/download/NimbusBase_Android_Tutorial.apk), and run.
+
+### Build yourself
+
 1. Clone the project to your computer with command `git clone https://github.com/NimbusBase/NimbusBase_Android_Tutorial.git`
 1. Uncompress the vender project under directory `/Libraries`
   + `Libraries/BoxAndroidLibraryV2.zip`
   + `Libraries/DropboxClient2.zip`
 1. Build and run
+
+## Relevance
+
+Companion project: [NimbusBase iOS Tutorial](https://github.com/NimbusBase/NimbusBase_iOS) 
