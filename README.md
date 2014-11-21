@@ -42,4 +42,4 @@ Download [NimbusBase_Android_Tutorial.apk](http://nimbusbase.com/download/Nimbus
 
 ## Relevance
 
-Companion project: [NimbusBase iOS Tutorial](https://github.com/NimbusBase/NimbusBase_iOS) 
+Companion project: [NimbusBase iOS Tutorial](https://github.com/NimbusBase/NimbusBase_iOS_Tutorial) 
