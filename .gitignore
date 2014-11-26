@@ -40,8 +40,3 @@ proguard/
 .idea/libraries/*.xml
 *.iml
 .idea/modules.xml
-
-# Libraries
-Libraries/*
-!Libraries/BoxAndroidLibraryV2.zip
-!Libraries/DropboxClient2.zip
