@@ -36,11 +36,8 @@ Download [NimbusBase_Android_Tutorial.apk](http://nimbusbase.com/download/Nimbus
 
 ### Build yourself
 
-1. Clone the project to your computer with command `git clone https://github.com/NimbusBase/NimbusBase_Android_Tutorial.git`
-1. Uncompress the vender project under directory `/Libraries`
-  + `Libraries/BoxAndroidLibraryV2.zip`
-  + `Libraries/DropboxClient2.zip`
-1. Open the project with [Android Studio](https://developer.android.com/sdk/installing/studio.html), build it and run
+0. Clone the project to your computer with command `git clone https://github.com/NimbusBase/NimbusBase_Android_Tutorial.git`
+0. Open the project with [Android Studio](https://developer.android.com/sdk/installing/studio.html), build it and run
 
 ## Relevance
 
