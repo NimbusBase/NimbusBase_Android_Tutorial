@@ -30,8 +30,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':Libraries:BoxAndroidLibraryV2')
-    compile fileTree(dir: '../Libraries/DropboxClient2/lib', include: ['*.jar'])
+    compile files('Libraries/BoxAndroidLibraryV2/BoxAndroidLibraryV2.aar')
+    compile fileTree(dir: 'Libraries/DropboxClient2/lib', include: ['*.jar'])
     compile ('com.nimbusbase:nimbusbaseandroid:1.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'commons-io', module: 'commons-io'
