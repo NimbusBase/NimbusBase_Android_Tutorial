@@ -2,7 +2,6 @@ package com.nimbusbase.nimbusbase_android_tutorial;
 
 import android.content.Context;
 import android.preference.Preference;
-import android.view.View;
 
 /**
  * Created by Will on 11/10/14.
