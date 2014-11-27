@@ -236,8 +236,8 @@ public class IndexFragment extends PreferenceFragment {
         promise
                 .onProgress(new Callback.ProgressListener() {
                     @Override
-                    public void onProgress(double v) {
-                        onServerSyncProgress(server, index, (float) v);
+                    public void onProgress(float progress) {
+                        onServerSyncProgress(server, index, progress);
                     }
                 })
                 .onAlways(new Callback.AlwaysListener() {
