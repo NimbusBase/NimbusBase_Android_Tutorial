@@ -43,4 +43,6 @@ Download [NimbusBase_Android_Tutorial.apk](http://nimbusbase.com/download/Nimbus
 
 ## Relevance
 
+You can also download our iOS tutorial and sync data between iOS and Android.
+
 Companion project: [NimbusBase iOS Tutorial](https://github.com/NimbusBase/NimbusBase_iOS_Tutorial) 
