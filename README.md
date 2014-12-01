@@ -1,7 +1,9 @@
-NimbusBase_Android_Tutorial
+NimbusBase Android Tutorial
 ===========================
 
-"NimbusBase Android Tutorial" is a sample NimbusBase app on demonstrating how to sync between Android and iOS device via personal cloud (Dropbox, Box).
+NimbusBase Android is a product that allows you to replicate your app's sqlite storage on to the personal cloud (Dropbox, box) storage of a user.
+
+This app here is a simple app store that shows you how to link NimbusBase Android to your app.
 
 For more information please visit our [Tutorial Page](http://nimbusbase.com/articles/tutorial-android.html).
 
