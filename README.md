@@ -28,7 +28,7 @@ To sync your data to cloud
 
 ![To sync](https://raw.githubusercontent.com/NimbusBase/NimbusBase_Android_Tutorial/master/Resource/Github/img/sync.png)
 
-Then you can check if your data is synced on another Android or iOS device.
+Then you can check if your data is synced on another Android or iOS device or open up the folder containing your data and see the records themselves.
 
 ## How to run
 
