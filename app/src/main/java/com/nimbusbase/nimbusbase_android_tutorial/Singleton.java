@@ -29,7 +29,7 @@ public class Singleton {
 
         public static Map<String, Object> getBaseConfigs() {
             final String
-                    appName = "Nimbus iOS Tutorial";
+                    appName = "Nimbus Android Tutorial";
             return
                     new HashMap<String, Object>() {{
                         put(Config.SERVERS,
