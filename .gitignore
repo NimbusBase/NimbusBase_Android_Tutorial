@@ -40,3 +40,4 @@ proguard/
 .idea/libraries/*.xml
 *.iml
 .idea/modules.xml
+.idea/inspectionProfiles/

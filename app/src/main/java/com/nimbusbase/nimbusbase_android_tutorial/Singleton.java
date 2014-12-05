@@ -38,6 +38,13 @@ public class Singleton {
                                 {
                                     add(new HashMap<String, Object>() {
                                         {
+                                            put(Config.CLOUD, Config.GDRIVE);
+                                            put(Config.APP_NAME, appName);
+                                            put(Config.AUTH_SCOPE, Config.AuthScope.ROOT);
+                                        }
+                                    });
+                                    add(new HashMap<String, Object>() {
+                                        {
                                             put(Config.CLOUD, Config.DROPBOX);
                                             put(Config.APP_NAME, appName);
                                             put(Config.APP_ID, "x0e7vb4ls3lub5d");

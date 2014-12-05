@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.nimbusbase.nimbusbase.Base;
+
 /**
  * Created by Will on 11/10/14.
  */
@@ -30,5 +32,10 @@ public class MDLDatabaseManager extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        Base.setupDataBaseOnOpen(db);
     }
 }
