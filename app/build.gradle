@@ -33,7 +33,8 @@ dependencies {
     compile fileTree(dir: '../Libraries/DropboxClient2/lib', include: ['*.jar'])
     compile 'com.box:boxandroidlibv2:3.0.4-SNAPSHOT@aar'
     compile 'net.box:boxjavalibv2:3.0.9'
-    compile ('com.nimbusbase:nimbusbaseandroid:1.0-SNAPSHOT@aar') {
+    compile 'com.google.android.gms:play-services:6.1.11'
+    compile ('com.nimbusbase:nimbusbaseandroid:1.0.2-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'commons-io', module: 'commons-io'
     }

@@ -1,2 +1,1 @@
-include ':app',
-        ':Libraries:BoxAndroidLibraryV2'
+include ':Libraries:BoxAndroidLibraryV2', 'app'
